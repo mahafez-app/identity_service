@@ -137,6 +137,19 @@ final class FirebaseIdentityService implements IdentityService {
   Future<Result<UserProfile>> getUserProfile(String uid) =>
       _execute(() => _getProfileOrThrow(uid));
 
+  @override
+  Future<Result<UserProfile?>> getUserProfileByEmail(String email) =>
+      _execute(() async {
+        final snapshot = await _firestore
+            .collection(_usersCollection)
+            .where('email', isEqualTo: email.trim())
+            .limit(1)
+            .get();
+        if (snapshot.docs.isEmpty) return null;
+        final document = snapshot.docs.first;
+        return _profileFromMap(document.id, document.data());
+      });
+
   Future<UserProfile> _getProfileOrThrow(String uid) async {
     final snapshot = await _firestore
         .collection(_usersCollection)

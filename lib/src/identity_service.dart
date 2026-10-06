@@ -22,4 +22,5 @@ abstract interface class IdentityService {
   });
   Future<Result<void>> signOut();
   Future<Result<UserProfile>> getUserProfile(String uid);
+  Future<Result<UserProfile?>> getUserProfileByEmail(String email);
 }
